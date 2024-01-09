@@ -1,7 +1,9 @@
 package apiserver
 
 import (
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
+	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
+
 	"log/slog"
 	"time"
 )
@@ -12,17 +14,14 @@ const (
 	ServerReadTimeout    = 10 * time.Second
 	ServerWriteTimeout   = 10 * time.Second
 	ServerIdleTimeout    = 60 * time.Second
-
-	apiPrefix = "/simplemedia"
 )
 
-type Handler interface {
-	AddRoutes(router fiber.Router)
-}
-
 type apiServer struct {
+	app      *fiber.App
+	handlers []routes.Handler
 	logLevel slog.Level
 	logger   *slog.Logger
+	port     string
 }
 
 type Option func(*apiServer)
