@@ -18,3 +18,27 @@ func (r *userStorage) OneRecord(ctx context.Context, condition ...interface{}) (
 	}
 	return user, nil
 }
+
+func (r *userStorage) OneRecordWithPhone(ctx context.Context, phone string) (model.User, error) {
+	var user model.User
+	if err := r.db.WithContext(ctx).Where("phone=?", phone).Debug().First(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+func (r *userStorage) OneRecordWithEmail(ctx context.Context, email string) (model.User, error) {
+	var user model.User
+	if err := r.db.WithContext(ctx).Where("email=?", email).Debug().First(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+func (r *userStorage) OneRecordWithUserName(ctx context.Context, userName string) (model.User, error) {
+	var user model.User
+	if err := r.db.WithContext(ctx).Where("username=?", userName).Debug().First(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}

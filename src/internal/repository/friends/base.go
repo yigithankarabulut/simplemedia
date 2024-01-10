@@ -8,9 +8,11 @@ import (
 
 type FriendStorer interface {
 	Insert(ctx context.Context, friend *model.Friends) error
-	Delete(ctx context.Context, id uint) error
+	Delete(ctx context.Context, sender_id, receiver_id uint) error
 	Accept(ctx context.Context, sender_id, receiver_id uint) error
 	Reject(ctx context.Context, sender_id, receiver_id uint) error
+	Get(ctx context.Context, sender_id, receiver_id uint) (model.Friends, error)
+	//GetAll(ctx context.Context, userID uint, accept bool) ([]model.Friends, error)
 }
 
 type friendStorage struct {

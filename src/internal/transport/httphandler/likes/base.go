@@ -4,15 +4,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
 	. "github.com/yigithankarabulut/simplemedia/src/internal/service/likes"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
 )
 
 type Handler struct {
 	service LikesService
+	util    *util.Util
 }
 
-func NewHandler(service LikesService) routes.Handler {
+func NewHandler(util *util.Util, service LikesService) routes.Handler {
 	return &Handler{
 		service: service,
+		util:    util,
 	}
 }
 

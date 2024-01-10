@@ -8,7 +8,7 @@ import (
 
 func (r *userStorage) Update(ctx context.Context, user *model.User, tx ...*gorm.DB) error {
 	db := r.SetTx(tx...)
-	if err := db.WithContext(ctx).Save(user).Error; err != nil {
+	if err := db.Model(&model.User{}).Where("id = ?", user.ID).Updates(user).Error; err != nil {
 		return err
 	}
 	return nil

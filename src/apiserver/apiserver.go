@@ -19,6 +19,7 @@ import (
 	posthttphandler "github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/user"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/postgresql"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
 	"gorm.io/gorm"
 	"log/slog"
 	"os"
@@ -73,23 +74,24 @@ func New(opts ...Option) error {
 }
 
 func AppendLayers(apiserver *apiServer, db *gorm.DB) {
+	util := util.NewUtils()
 	userRepository := userstorage.NewUserRepository(userstorage.WithUserRepositoryDB(db))
 	postsRepository := poststorage.NewPostRepository(poststorage.WithPostRepositoryDB(db))
 	commentRepository := commentstorage.NewCommentRepository(commentstorage.WithCommentRepositoryDB(db))
 	likesRepository := likesstorage.NewLikeRepository(likesstorage.WithLikeRepositoryDB(db))
 	friendsRepository := friendsstorage.NewFriendRepository(friendsstorage.WithFriendRepositoryDB(db))
 
-	userService := usersevice.NewUserService(usersevice.WithUserServiceUserStorage(userRepository))
-	postsService := postservice.NewPostService(postservice.WithPostServicePostStorage(postsRepository))
-	commentService := commentservice.NewCommentService(commentservice.WithCommentServiceCommentStorage(commentRepository))
-	likesService := likesservice.NewLikesService(likesservice.WithLikesServiceLikesStorage(likesRepository))
-	friendService := friendsservice.NewFriendService(friendsservice.WithFriendServiceFriendStorage(friendsRepository))
+	userService := usersevice.NewUserService(util, usersevice.WithUserServiceUserStorage(userRepository))
+	postsService := postservice.NewPostService(util, postservice.WithPostServicePostStorage(postsRepository))
+	commentService := commentservice.NewCommentService(util, commentservice.WithCommentServiceCommentStorage(commentRepository))
+	likesService := likesservice.NewLikesService(util, likesservice.WithLikesServiceLikesStorage(likesRepository))
+	friendService := friendsservice.NewFriendService(util, userRepository, friendsservice.WithFriendServiceFriendStorage(friendsRepository))
 
-	usersHandler := userhttphandler.NewHandler(userService)
-	postsHandler := posthttphandler.NewHandler(postsService)
-	commentsHandler := commenthttphandler.NewHandler(commentService)
-	likesHandler := likeshttphandler.NewHandler(likesService)
-	friendsHandler := friendshttphandler.NewHandler(friendService)
+	usersHandler := userhttphandler.NewHandler(util, userService)
+	postsHandler := posthttphandler.NewHandler(util, postsService)
+	commentsHandler := commenthttphandler.NewHandler(util, commentService)
+	likesHandler := likeshttphandler.NewHandler(util, likesService)
+	friendsHandler := friendshttphandler.NewHandler(util, friendService)
 
 	apiserver.handlers = append(apiserver.handlers, usersHandler, postsHandler, commentsHandler, likesHandler, friendsHandler)
 
