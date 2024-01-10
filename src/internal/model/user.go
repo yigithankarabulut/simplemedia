@@ -27,8 +27,6 @@ func (u *User) Mapper(req dto.RegisterRequest) error {
 	u.Email = req.Email
 	u.Password = pass
 	u.Phone = req.Phone
-	if req.Picture != "" {
-		u.ProfilePicture = req.Picture
-	}
+	u.ProfilePicture = req.PictureUrl
 	return nil
 }

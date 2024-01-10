@@ -1,11 +1,16 @@
 package util
 
 import (
+	"errors"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"mime/multipart"
+	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -20,13 +25,43 @@ func NewUtils() *Util {
 func (u *Util) Validate(c *fiber.Ctx, data interface{}) error {
 	err := c.BodyParser(data)
 	if err != nil {
-		return err
+		err = c.QueryParser(data)
+		if err != nil {
+			return err
+		}
 	}
 	err = u.Valid.Struct(data)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (u *Util) ValidateImageSize(file *multipart.FileHeader) error {
+	if file.Size > 5000000 { // 5MB max
+		return errors.New("image size is too big")
+	}
+	return nil
+}
+
+func (u *Util) SavePicture(file *multipart.FileHeader, username, path string) (string, error) {
+	if err := u.ValidateImageSize(file); err != nil {
+		return "", err
+	}
+	split := strings.Split(file.Filename, ".")
+	extention := split[len(split)-1]
+	if extention != "jpg" && extention != "jpeg" && extention != "png" {
+		return "", fmt.Errorf("invalid file type: %s", extention)
+	}
+	dirPath := fmt.Sprintf("./uploads/%s/%s", username, path)
+	if err := os.MkdirAll(dirPath, 0777); err != nil {
+		return "", err
+	}
+	filepath := fmt.Sprintf("%s/%s.%s", dirPath, time.Now().Format("2006-01-02-15-04-05"), extention)
+	if _, err := os.Create(filepath); err != nil {
+		return "", err
+	}
+	return filepath, nil
 }
 
 func (u *Util) Response(Status int, Data interface{}) ResponseData {

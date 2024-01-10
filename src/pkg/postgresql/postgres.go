@@ -42,9 +42,6 @@ func Connect() (*gorm.DB, error) {
 		return nil, err
 	}
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", conf.Host, conf.User, conf.Pass, conf.Name, conf.Port)
-	fmt.Println("---------------------")
-	fmt.Println(dsn)
-	fmt.Println("---------------------")
 	sqlDB, err := sql.Open("pgx", dsn)
 
 	db, err := gorm.Open(postgres.New(postgres.Config{Conn: sqlDB}), &gorm.Config{})

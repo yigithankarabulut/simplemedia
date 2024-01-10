@@ -8,20 +8,27 @@ import (
 	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
-func (s *userService) Register(ctx context.Context, req dto.RegisterRequest) error {
+func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest, ch chan error) error {
 	var (
 		user model.User
 		err  error
 		tx   = s.userStorage.CreateTx()
 	)
-	if err = user.Mapper(req); err != nil {
+	if err = user.Mapper(*req); err != nil {
 		return err
 	}
 	defer tx.Rollback()
 
 	if err = s.duplicateCheck(user.Username, user.Email, user.Phone); err != nil {
+		ch <- err
 		return err
 	}
+	ch <- nil
+	errs := <-ch
+	if errs != nil {
+		return errs
+	}
+	user.ProfilePicture = req.PictureUrl
 	if err = s.userStorage.Insert(ctx, &user, tx); err != nil {
 		return err
 	}

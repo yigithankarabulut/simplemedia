@@ -12,7 +12,8 @@ type FriendStorer interface {
 	Accept(ctx context.Context, sender_id, receiver_id uint) error
 	Reject(ctx context.Context, sender_id, receiver_id uint) error
 	Get(ctx context.Context, sender_id, receiver_id uint) (model.Friends, error)
-	//GetAll(ctx context.Context, userID uint, accept bool) ([]model.Friends, error)
+	//GetAllFriends(ctx context.Context, userID uint) ([]model.Friends, error)
+	//GetAllRequests(ctx context.Context, userID uint) ([]model.Friends, error)
 }
 
 type friendStorage struct {

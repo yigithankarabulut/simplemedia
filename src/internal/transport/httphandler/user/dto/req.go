@@ -1,11 +1,14 @@
 package dto
 
+import "mime/multipart"
+
 type RegisterRequest struct {
-	Username string `json:"username" validate:"required,alphanum,min=3,max=50"`
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8,max=50"`
-	Phone    string `json:"phone" validate:"required,e164"`
-	Picture  string `json:"picture" validate:"omitempty,image"`
+	Username   string                `json:"username" form:"username" validate:"required,alphanum,min=3,max=50"`
+	Email      string                `json:"email" form:"email" validate:"required,email"`
+	Password   string                `json:"password" form:"password" validate:"required,min=8,max=50"`
+	Phone      string                `json:"phone" form:"phone" validate:"required,e164"`
+	Picture    *multipart.FileHeader `form:"picture" validate:"omitempty,image"`
+	PictureUrl string
 }
 
 type LoginRequest struct {

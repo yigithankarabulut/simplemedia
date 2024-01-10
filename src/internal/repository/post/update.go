@@ -8,7 +8,7 @@ import (
 
 func (r *postStorage) Update(ctx context.Context, post *model.Post, tx ...*gorm.DB) error {
 	db := r.SetTx(tx...)
-	if err := db.WithContext(ctx).Save(post).Error; err != nil {
+	if err := db.Model(&post).Updates(post).Error; err != nil {
 		return err
 	}
 	return nil

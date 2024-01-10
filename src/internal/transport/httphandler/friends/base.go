@@ -27,5 +27,5 @@ func (h *Handler) AddRoutes(app fiber.Router) {
 	friends.Post("/accept", h.AcceptFriends)
 	friends.Delete("/decline", h.DeclineFriends)
 	friends.Delete("/delete", h.DeleteFriends)
-	friends.Get("/request", h.GetAllFriendRequests)
+	friends.Get("/request", h.GetAllFriendRequests) // TODO: Implement this endpoint {Paginate yapılacak}
 }

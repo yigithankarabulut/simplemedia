@@ -1,11 +1,17 @@
 package postservice
 
 import (
+	"context"
 	. "github.com/yigithankarabulut/simplemedia/src/internal/repository/post"
+	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
 )
 
 type PostService interface {
+	Create(ctx context.Context, req dto.CreatePostRequest) error
+	Delete(ctx context.Context, req dto.DeletePostRequest) error
+	Get(ctx context.Context, req dto.GetPostRequest) (dto.ResponseForGetPost, error)
+	Update(ctx context.Context, req dto.UpdatePostRequest) error
 }
 
 type postService struct {

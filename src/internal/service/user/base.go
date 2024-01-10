@@ -8,7 +8,7 @@ import (
 )
 
 type UserService interface {
-	Register(ctx context.Context, req dto.RegisterRequest) error
+	Register(ctx context.Context, req *dto.RegisterRequest, errCh chan error) error
 	Login(ctx context.Context, req dto.LoginRequest) (dto.LoginResponse, error)
 	Logout(ctx context.Context, userID uint) error
 	ChangePassword(ctx context.Context, userID uint, req dto.ChangePwdRequest) error

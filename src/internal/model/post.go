@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
+	"gorm.io/gorm"
+)
 
 type Post struct {
 	gorm.Model
@@ -9,4 +12,11 @@ type Post struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 	Image   string `json:"image"`
+}
+
+func (p *Post) Mapper(req dto.CreatePostRequest) {
+	p.UserID = req.UserID
+	p.Title = req.Title
+	p.Content = req.Content
+	p.Image = req.ImageUrl
 }
