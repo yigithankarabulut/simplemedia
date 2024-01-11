@@ -11,6 +11,7 @@ import (
 const (
 	ContextCancelTimeout = 5 * time.Second
 	ShutdownTimeout      = 2 * time.Second
+	Port                 = ":8080"
 )
 
 type apiServer struct {

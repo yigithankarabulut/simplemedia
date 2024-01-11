@@ -34,7 +34,7 @@ func New(opts ...Option) error {
 	apiserver := &apiServer{
 		logLevel: slog.LevelInfo,
 		app:      fiber.New(),
-		port:     ":8080",
+		port:     Port,
 	}
 	for _, opt := range opts {
 		opt(apiserver)
