@@ -39,3 +39,9 @@ type GetCommentRequest struct {
 	UserID uint `json:"-"`
 	ID     uint `json:"-" query:"post_id" validate:"required"`
 }
+
+type GetAllCommentRequest struct {
+	UserID    uint `json:"-"`
+	PostID    uint `json:"-" query:"post_id" validate:"omitempty,numeric"`
+	CommentID uint `json:"-" query:"comment_id" validate:"omitempty,numeric"`
+}

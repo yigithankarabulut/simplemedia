@@ -68,7 +68,7 @@ func New(opts ...Option) error {
 		return fmt.Errorf("listening error: %w", err)
 	case <-shutdown:
 		logger.Info("starting shutdown", "pid", os.Getpid())
-		time.Sleep(1 * time.Second)
+		time.Sleep(ShutdownTimeout * time.Second)
 		defer logger.Info("shutdown completed", "pid", os.Getpid())
 	}
 	return nil
@@ -90,11 +90,11 @@ func AppendLayers(apiserver *apiServer, db *gorm.DB) {
 	repo.LikeStorer = likesRepository
 	repo.FriendStorer = friendsRepository
 
-	userService := usersevice.NewUserService(util, usersevice.WithUserServiceUserStorage(userRepository))
-	postsService := postservice.NewPostService(util, postservice.WithPostServicePostStorage(postsRepository))
+	userService := usersevice.NewUserService(util, repo, usersevice.WithUserServiceUserStorage(userRepository))
+	postsService := postservice.NewPostService(util, repo, postservice.WithPostServicePostStorage(postsRepository))
 	commentService := commentservice.NewCommentService(util, repo, commentservice.WithCommentServiceCommentStorage(commentRepository))
 	likesService := likesservice.NewLikesService(util, repo, likesservice.WithLikesServiceLikesStorage(likesRepository))
-	friendService := friendsservice.NewFriendService(util, userRepository, friendsservice.WithFriendServiceFriendStorage(friendsRepository))
+	friendService := friendsservice.NewFriendService(util, repo, friendsservice.WithFriendServiceFriendStorage(friendsRepository))
 
 	usersHandler := userhttphandler.NewHandler(util, userService)
 	postsHandler := posthttphandler.NewHandler(util, postsService)

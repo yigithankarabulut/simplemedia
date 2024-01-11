@@ -27,5 +27,5 @@ func (h *Handler) AddRoutes(app fiber.Router) {
 	user.Use(basehttphandler.AuthMiddleware())
 	user.Post("/logout", h.Logout)
 	user.Put("/pwd", h.ChangePassword)
-	user.Put("/picture", h.UpdateProfilePicture) // TODO: Implement this endpoint
+	user.Put("/picture", h.UpdateProfilePicture)
 }

@@ -27,5 +27,5 @@ func (h *Handler) AddRoutes(app fiber.Router) {
 	comment.Put("/update", h.Update)
 	comment.Delete("/delete", h.Delete)
 	comment.Get("/get", h.Get)
-	comment.Get("/getall", h.GetAll) // TODO: pagination
+	comment.Get("/list", h.GetAll)
 }

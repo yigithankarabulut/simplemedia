@@ -18,10 +18,13 @@ func (s *postService) Get(ctx context.Context, req dto.GetPostRequest) (dto.Resp
 	if post.UserID != req.UserID {
 		return res, errors.New("You are not authorized to see this post")
 	}
+	res.ID = post.ID
 	res.UserID = post.UserID
 	res.Title = post.Title
 	res.Content = post.Content
 	res.ImageUrl = post.Image
+
+	res.ShortUrl = s.utils.CreateShortLink(res.ID, res.UserID)
 
 	return res, nil
 }

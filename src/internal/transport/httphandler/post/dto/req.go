@@ -28,3 +28,8 @@ type GetPostRequest struct {
 	UserID uint `json:"-" validate:"-"`
 	ID     uint `json:"-" query:"id" param:"id" validate:"required"`
 }
+
+type GetAllPostRequest struct {
+	UserID uint `json:"-" validate:"-"`
+	ID     uint `json:"-" query:"id" param:"id" validate:"required"`
+}

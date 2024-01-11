@@ -44,7 +44,7 @@ func (u *Util) ValidateImageSize(file *multipart.FileHeader) error {
 	return nil
 }
 
-func (u *Util) SavePicture(file *multipart.FileHeader, username, path string) (string, error) {
+func (u *Util) SavePicture(file *multipart.FileHeader, path, dirname string) (string, error) {
 	if err := u.ValidateImageSize(file); err != nil {
 		return "", err
 	}
@@ -53,7 +53,7 @@ func (u *Util) SavePicture(file *multipart.FileHeader, username, path string) (s
 	if extention != "jpg" && extention != "jpeg" && extention != "png" {
 		return "", fmt.Errorf("invalid file type: %s", extention)
 	}
-	dirPath := fmt.Sprintf("./uploads/%s/%s", username, path)
+	dirPath := fmt.Sprintf("./uploads/%s/%s", path, dirname)
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		return "", err
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
+	"strconv"
 )
 
 func (h *Handler) Create(c *fiber.Ctx) error {
@@ -18,7 +19,8 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 	req.UserID = userID
 	file, err := c.FormFile("image")
 	if err == nil {
-		filepath, err := h.util.SavePicture(file, req.Title, "post-images") // TODO: change title to post id
+		ids := strconv.Itoa(int(req.UserID))
+		filepath, err := h.util.SavePicture(file, "post-images", ids)
 		if err != nil {
 			return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 		}

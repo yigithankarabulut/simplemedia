@@ -20,3 +20,10 @@ type ChangePwdRequest struct {
 	OldPassword string `json:"old_password" validate:"required,min=8,max=50"`
 	NewPassword string `json:"new_password" validate:"required,min=8,max=50"`
 }
+
+type UpdatePictureRequest struct {
+	UserID     uint                  `json:"-"`
+	Username   string                `json:"-" form:"username" validate:"required,alphanum,min=3,max=50"`
+	Picture    *multipart.FileHeader `json:"-" form:"picture" validate:"omitempty,image"`
+	PictureUrl string
+}

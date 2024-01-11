@@ -2,6 +2,7 @@ package usersevice
 
 import (
 	"context"
+	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
 	. "github.com/yigithankarabulut/simplemedia/src/internal/repository/user"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/user/dto"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
@@ -12,10 +13,12 @@ type UserService interface {
 	Login(ctx context.Context, req dto.LoginRequest) (dto.LoginResponse, error)
 	Logout(ctx context.Context, userID uint) error
 	ChangePassword(ctx context.Context, userID uint, req dto.ChangePwdRequest) error
+	UpdateProfilePicture(ctx context.Context, req dto.UpdatePictureRequest) error
 }
 
 type userService struct {
 	userStorage UserStorer
+	repository  *routes.Repositories
 	utils       *util.Util
 }
 
@@ -27,9 +30,10 @@ func WithUserServiceUserStorage(userStorage UserStorer) UserServiceOption {
 	}
 }
 
-func NewUserService(util *util.Util, opts ...UserServiceOption) UserService {
+func NewUserService(util *util.Util, repo *routes.Repositories, opts ...UserServiceOption) UserService {
 	u := &userService{
-		utils: util,
+		utils:      util,
+		repository: repo,
 	}
 	for _, opt := range opts {
 		opt(u)

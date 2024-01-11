@@ -11,9 +11,6 @@ import (
 const (
 	ContextCancelTimeout = 5 * time.Second
 	ShutdownTimeout      = 2 * time.Second
-	ServerReadTimeout    = 10 * time.Second
-	ServerWriteTimeout   = 10 * time.Second
-	ServerIdleTimeout    = 60 * time.Second
 )
 
 type apiServer struct {

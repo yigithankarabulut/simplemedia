@@ -13,6 +13,7 @@ type CommentService interface {
 	Update(ctx context.Context, req dto.UpdateCommentRequest) error
 	Delete(ctx context.Context, req dto.DeleteCommentRequest) error
 	Get(ctx context.Context, req dto.GetCommentRequest) (dto.BaseCommentResponse, error)
+	GetAll(ctx context.Context, req dto.GetAllCommentRequest) ([]dto.BaseCommentResponse, error)
 }
 
 type commentService struct {

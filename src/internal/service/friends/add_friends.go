@@ -12,9 +12,12 @@ func (s *friendService) AddFriends(ctx context.Context, req dto.AddFriendRequest
 	var (
 		friend model.Friends
 	)
+	if req.SenderID == req.ReceiverID {
+		return errors.New("you cannot add yourself as a friend")
+	}
 	friend.SenderID = req.SenderID
 	friend.ReceiverID = req.ReceiverID
-	if _, err := s.userStorage.GetByID(ctx, friend.ReceiverID); err != nil {
+	if _, err := s.repository.UserStorer.GetByID(ctx, friend.ReceiverID); err != nil {
 		return errors.New(constant.FriendUserNotFound)
 	}
 	res, err := s.friendStorage.Get(ctx, req.SenderID, req.ReceiverID)
