@@ -23,8 +23,7 @@ func (s *postService) Get(ctx context.Context, req dto.GetPostRequest) (dto.Resp
 	res.Title = post.Title
 	res.Content = post.Content
 	res.ImageUrl = post.Image
-
-	res.ShortUrl = s.utils.CreateShortLink(res.ID, res.UserID)
+	res.ShortUrl = s.utils.EncodeToShortURL(post.ID, post.UserID)
 
 	return res, nil
 }

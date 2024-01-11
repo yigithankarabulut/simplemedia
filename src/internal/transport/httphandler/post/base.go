@@ -7,7 +7,6 @@ import (
 	. "github.com/yigithankarabulut/simplemedia/src/internal/service/post"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/basehttphandler"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
-	"net/http"
 )
 
 type Handler struct {
@@ -35,12 +34,14 @@ func (h *Handler) AddRoutes(app fiber.Router) {
 
 func (h *Handler) ShortRedirect(c *fiber.Ctx) error {
 	shortLink := c.Query("id")
-	decodedID, err := h.util.DecodeBase62(shortLink)
+	fmt.Println(shortLink)
+
+	postID, userID, err := h.util.DecodeShortURL(shortLink)
 	if err != nil {
 		return c.JSON(h.util.BasicError(err, fiber.StatusBadRequest))
 	}
-	redirectToEndpoint := fmt.Sprintf("/post/get?id=%d", decodedID)
 
-	c.Set("ShortLink", shortLink)
-	return c.Redirect(redirectToEndpoint, http.StatusMovedPermanently)
+	c.Locals("userID", userID)
+	c.Locals("postID", postID)
+	return h.Get(c)
 }

@@ -11,7 +11,9 @@ func (h *Handler) Get(c *fiber.Ctx) error {
 		res dto.ResponseForGetPost
 		err error
 	)
-	if err = h.util.Validate(c, &req); err != nil {
+	if c.Locals("postID") != nil {
+		req.ID = c.Locals("postID").(uint)
+	} else if err = h.util.Validate(c, &req); err != nil {
 		return c.JSON(h.util.BasicError(err, fiber.StatusBadRequest))
 	}
 	if c.Locals("userID") == nil {

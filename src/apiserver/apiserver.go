@@ -68,7 +68,7 @@ func New(opts ...Option) error {
 		return fmt.Errorf("listening error: %w", err)
 	case <-shutdown:
 		logger.Info("starting shutdown", "pid", os.Getpid())
-		time.Sleep(ShutdownTimeout * time.Second)
+		time.Sleep(ShutdownTimeout)
 		defer logger.Info("shutdown completed", "pid", os.Getpid())
 	}
 	return nil
