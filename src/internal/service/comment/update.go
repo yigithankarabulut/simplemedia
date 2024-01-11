@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/comment/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *commentService) Update(ctx context.Context, req dto.UpdateCommentRequest) error {
@@ -14,14 +15,14 @@ func (s *commentService) Update(ctx context.Context, req dto.UpdateCommentReques
 	)
 	comment, err = s.commentStorage.GetByID(ctx, req.ID)
 	if err != nil {
-		return errors.New("comment not found")
+		return errors.New(constant.CommentNotFound)
 	}
 	if comment.UserID != req.UserID {
-		return errors.New("you are not owner of this comment")
+		return errors.New(constant.CommentNotOwner)
 	}
 	comment.Content = req.Content
 	if err = s.commentStorage.Update(ctx, comment); err != nil {
-		return err
+		return errors.New(constant.CommentUpdateFail)
 	}
 	return nil
 }

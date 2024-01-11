@@ -3,6 +3,7 @@ package usersevice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/user/dto"
@@ -27,7 +28,7 @@ func (s *userService) Login(ctx context.Context, req dto.LoginRequest) (dto.Logi
 	}
 	token, err := s.createJwt(user.ID)
 	if err != nil {
-		return resp, err
+		return resp, errors.New(fmt.Sprintf(constant.FailedLogin, err.Error()))
 	}
 	if err = s.userStorage.ChangeActive(ctx, user.ID, true); err != nil {
 		return resp, err

@@ -2,8 +2,10 @@ package commentservice
 
 import (
 	"context"
+	"errors"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/comment/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *commentService) GetAll(ctx context.Context, req dto.GetAllCommentRequest) ([]dto.BaseCommentResponse, error) {
@@ -27,7 +29,7 @@ func (s *commentService) GetAll(ctx context.Context, req dto.GetAllCommentReques
 		)
 		user, err = s.repository.UserStorer.GetByID(ctx, comment.UserID)
 		if err != nil {
-			return nil, err
+			return nil, errors.New(constant.FailedUserNotFound)
 		}
 		res = append(res, dto.BaseCommentResponse{
 			ID:       comment.ID,

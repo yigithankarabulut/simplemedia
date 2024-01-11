@@ -3,6 +3,7 @@ package usersevice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/user/dto"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
@@ -21,16 +22,16 @@ func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest, ch
 
 	if err = s.duplicateCheck(user.Username, user.Email, user.Phone); err != nil {
 		ch <- err
-		return err
+		return nil
 	}
 	ch <- nil
 	errs := <-ch
 	if errs != nil {
-		return errs
+		return errors.New(fmt.Sprintf(constant.FailedSavePicture, errs.Error()))
 	}
 	user.ProfilePicture = req.PictureUrl
 	if err = s.userStorage.Insert(ctx, &user, tx); err != nil {
-		return err
+		return errors.New(fmt.Sprintf(constant.RegisterFailed, err.Error()))
 	}
 	tx.Commit()
 	return nil

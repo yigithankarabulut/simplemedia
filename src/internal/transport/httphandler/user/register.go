@@ -15,7 +15,9 @@ func (h *Handler) Register(c *fiber.Ctx) error {
 		errCh = make(chan error, 1)
 	)
 	if err := h.util.Validate(c, &req); err != nil {
-		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, err.Error()), fiber.StatusBadRequest))
+		return c.Status(400).JSON(h.util.BasicError(
+			fmt.Sprintf(constant.Validate, err.Error()),
+			fiber.StatusBadRequest))
 	}
 	defer close(errCh)
 	file, err := c.FormFile("picture")
@@ -41,7 +43,7 @@ func (h *Handler) Register(c *fiber.Ctx) error {
 		}()
 	}
 	if err := h.service.Register(c.Context(), &req, errCh); err != nil {
-		return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
+		return c.Status(500).JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 	}
-	return c.JSON(h.util.Response(fiber.StatusOK, "User registered successfully"))
+	return c.Status(200).JSON(h.util.Response(fiber.StatusOK, "User created successfully"))
 }

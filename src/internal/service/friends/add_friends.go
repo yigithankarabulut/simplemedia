@@ -3,6 +3,7 @@ package friendsservice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/friends/dto"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
@@ -13,7 +14,7 @@ func (s *friendService) AddFriends(ctx context.Context, req dto.AddFriendRequest
 		friend model.Friends
 	)
 	if req.SenderID == req.ReceiverID {
-		return errors.New("you cannot add yourself as a friend")
+		return errors.New(constant.FriendCannotAddSelf)
 	}
 	friend.SenderID = req.SenderID
 	friend.ReceiverID = req.ReceiverID
@@ -31,7 +32,7 @@ func (s *friendService) AddFriends(ctx context.Context, req dto.AddFriendRequest
 
 	friend.Accepted = false
 	if err := s.friendStorage.Insert(ctx, &friend); err != nil {
-		return err
+		return errors.New(fmt.Sprintf(constant.FriendRequestSentFail, err.Error()))
 	}
 	return nil
 }

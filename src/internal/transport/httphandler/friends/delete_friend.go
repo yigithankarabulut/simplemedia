@@ -14,7 +14,7 @@ func (h *Handler) DeleteFriends(c *fiber.Ctx) error {
 	)
 	strID := c.Query("id")
 	if strID == "" {
-		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, "invalid params"), fiber.StatusBadRequest))
+		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, constant.InvalidParam), fiber.StatusBadRequest))
 	}
 	id, err := strconv.Atoi(strID)
 	if err != nil {
@@ -29,5 +29,5 @@ func (h *Handler) DeleteFriends(c *fiber.Ctx) error {
 	if err := h.service.DeleteFriends(c.Context(), friend); err != nil {
 		return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 	}
-	return c.JSON(h.util.Response(fiber.StatusOK, "friend request declined successfully"))
+	return c.JSON(h.util.Response(fiber.StatusOK, constant.FriendRequestDelete))
 }

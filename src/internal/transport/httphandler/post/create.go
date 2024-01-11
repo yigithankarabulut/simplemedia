@@ -13,7 +13,7 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 		req dto.CreatePostRequest
 	)
 	if err := h.util.Validate(c, &req); err != nil {
-		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, err.Error()), fiber.StatusBadRequest))
+		return c.Status(fiber.StatusBadRequest).JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, err.Error()), fiber.StatusBadRequest))
 	}
 	userID := c.Locals("userID").(uint)
 	req.UserID = userID
@@ -22,15 +22,15 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 		ids := strconv.Itoa(int(req.UserID))
 		filepath, err := h.util.SavePicture(file, "post-images", ids)
 		if err != nil {
-			return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
+			return c.Status(fiber.StatusInternalServerError).JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 		}
 		if err := c.SaveFile(file, filepath); err != nil {
-			return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
+			return c.Status(fiber.StatusInternalServerError).JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 		}
 		req.ImageUrl = filepath
 	}
 	if err := h.service.Create(c.Context(), req); err != nil {
-		return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
+		return c.Status(fiber.StatusBadRequest).JSON(h.util.BasicError(err.Error(), fiber.StatusBadRequest))
 	}
-	return c.JSON(h.util.Response(fiber.StatusOK, "Post created successfully"))
+	return c.Status(fiber.StatusOK).JSON(h.util.Response(fiber.StatusOK, constant.SuccessCreatePost))
 }

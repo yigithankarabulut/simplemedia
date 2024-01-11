@@ -14,20 +14,20 @@ func (h *Handler) AcceptFriends(c *fiber.Ctx) error {
 	)
 	strID := c.Query("id")
 	if strID == "" {
-		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, "invalid params"), fiber.StatusBadRequest))
+		return c.Status(fiber.StatusBadRequest).JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, constant.InvalidParam), fiber.StatusBadRequest))
 	}
 	id, err := strconv.Atoi(strID)
 	if err != nil {
-		return c.JSON(h.util.BasicError(fmt.Sprintf(constant.Validate, err.Error()), fiber.StatusBadRequest))
+		return c.Status(fiber.StatusBadRequest).JSON(h.util.Response(fiber.StatusBadRequest, fmt.Sprintf(constant.Validate, err.Error())))
 	}
 	userID := c.Locals("userID").(uint)
 	if userID == 0 {
-		return c.JSON(h.util.BasicError(constant.UnknowError, fiber.StatusUnauthorized))
+		return c.Status(fiber.StatusBadRequest).JSON(h.util.Response(fiber.StatusBadRequest, fmt.Sprintf(constant.Validate, "unauthorized")))
 	}
 	friend.SenderID = uint(id)
 	friend.ReceiverID = userID
 	if err := h.service.AcceptFriends(c.Context(), friend); err != nil {
-		return c.JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
+		return c.Status(fiber.StatusInternalServerError).JSON(h.util.BasicError(err, fiber.StatusInternalServerError))
 	}
-	return c.JSON(h.util.Response(fiber.StatusOK, "friend request accepted successfully"))
+	return c.Status(fiber.StatusOK).JSON(h.util.Response(fiber.StatusOK, constant.FriendRequestAccept))
 }

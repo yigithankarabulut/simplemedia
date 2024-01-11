@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *postService) Get(ctx context.Context, req dto.GetPostRequest) (dto.ResponseForGetPost, error) {
@@ -16,7 +17,7 @@ func (s *postService) Get(ctx context.Context, req dto.GetPostRequest) (dto.Resp
 		return res, err
 	}
 	if post.UserID != req.UserID {
-		return res, errors.New("You are not authorized to see this post")
+		return res, errors.New(constant.FailedGetPost)
 	}
 	res.ID = post.ID
 	res.UserID = post.UserID

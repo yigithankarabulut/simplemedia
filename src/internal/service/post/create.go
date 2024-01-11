@@ -2,8 +2,11 @@ package postservice
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *postService) Create(ctx context.Context, req dto.CreatePostRequest) error {
@@ -16,7 +19,7 @@ func (s *postService) Create(ctx context.Context, req dto.CreatePostRequest) err
 	post.Mapper(req)
 
 	if err = s.postStorage.Insert(ctx, &post, tx); err != nil {
-		return err
+		return errors.New(fmt.Sprintf(constant.FailedPostCreate, err.Error()))
 	}
 	tx.Commit()
 	return nil

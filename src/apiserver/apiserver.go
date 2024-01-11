@@ -3,6 +3,7 @@ package apiserver
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
 	commentstorage "github.com/yigithankarabulut/simplemedia/src/internal/repository/comment"
 	friendsstorage "github.com/yigithankarabulut/simplemedia/src/internal/repository/friends"
@@ -46,6 +47,8 @@ func New(opts ...Option) error {
 	}
 	slog.SetDefault(apiserver.logger)
 	logger := apiserver.logger
+
+	apiserver.app.Use(recover.New())
 
 	db, err := postgresql.Connect()
 	if err != nil {

@@ -2,8 +2,11 @@ package likesservice
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/likes/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *likesService) GetAll(ctx context.Context, req dto.BaseLikesRequest) (dto.GetAllLikesResponse, error) {
@@ -20,13 +23,13 @@ func (s *likesService) GetAll(ctx context.Context, req dto.BaseLikesRequest) (dt
 	if req.CommentID != 0 {
 		likeComments, err = s.likesStorage.GetAllComment(ctx, req.CommentID)
 		if err != nil {
-			return dto.GetAllLikesResponse{}, err
+			return dto.GetAllLikesResponse{}, errors.New(fmt.Sprintf(constant.FailedLikeList, err.Error()))
 		}
 	}
 	if req.PostID != 0 {
 		likePosts, err = s.likesStorage.GetAllPost(ctx, req.PostID)
 		if err != nil {
-			return dto.GetAllLikesResponse{}, err
+			return dto.GetAllLikesResponse{}, errors.New(fmt.Sprintf(constant.FailedLikeList, err.Error()))
 		}
 	}
 	likes = append(likeComments, likePosts...)

@@ -3,8 +3,10 @@ package postservice
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/yigithankarabulut/simplemedia/src/internal/model"
 	"github.com/yigithankarabulut/simplemedia/src/internal/transport/httphandler/post/dto"
+	"github.com/yigithankarabulut/simplemedia/src/pkg/constant"
 )
 
 func (s *postService) Delete(ctx context.Context, req dto.DeletePostRequest) error {
@@ -14,13 +16,13 @@ func (s *postService) Delete(ctx context.Context, req dto.DeletePostRequest) err
 	)
 	post, err = s.postStorage.GetByID(ctx, req.ID)
 	if err != nil {
-		return err
+		return errors.New(fmt.Sprintf(constant.IDNotFound, err.Error()))
 	}
 	if post.UserID != req.UserID {
-		return errors.New("You are not authorized to delete this post")
+		return errors.New(constant.FailedDeleteUnauthorized)
 	}
 	if err := s.postStorage.Delete(ctx, req.ID); err != nil {
-		return err
+		return errors.New(fmt.Sprintf(constant.FailedPostDelete, err.Error()))
 	}
 	return nil
 }
