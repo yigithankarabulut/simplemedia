@@ -18,3 +18,10 @@ func (r *likeStorage) CommentDelete(ctx context.Context, id uint) error {
 	}
 	return nil
 }
+
+func (r *likeStorage) Delete(ctx context.Context, id uint) error {
+	if err := r.db.WithContext(ctx).Delete(&model.Likes{}, "id = ?", id).Error; err != nil {
+		return err
+	}
+	return nil
+}

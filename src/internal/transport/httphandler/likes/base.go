@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
 	. "github.com/yigithankarabulut/simplemedia/src/internal/service/likes"
+	"github.com/yigithankarabulut/simplemedia/src/internal/transport/basehttphandler"
 	"github.com/yigithankarabulut/simplemedia/src/pkg/util"
 )
 
@@ -21,10 +22,8 @@ func NewHandler(util *util.Util, service LikesService) routes.Handler {
 
 func (h *Handler) AddRoutes(app fiber.Router) {
 	likes := app.Group("/likes")
-	//app.Use()
-
+	app.Use(basehttphandler.AuthMiddleware())
 	likes.Post("/create", h.Create)
 	likes.Delete("/delete", h.Delete)
-	likes.Get("/get", h.Get)
 	likes.Get("/getall", h.GetAll)
 }

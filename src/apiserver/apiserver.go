@@ -3,6 +3,7 @@ package apiserver
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/yigithankarabulut/simplemedia/src/apiserver/routes"
 	commentstorage "github.com/yigithankarabulut/simplemedia/src/internal/repository/comment"
 	friendsstorage "github.com/yigithankarabulut/simplemedia/src/internal/repository/friends"
 	likesstorage "github.com/yigithankarabulut/simplemedia/src/internal/repository/likes"
@@ -75,16 +76,24 @@ func New(opts ...Option) error {
 
 func AppendLayers(apiserver *apiServer, db *gorm.DB) {
 	util := util.NewUtils()
+	repo := routes.NewRepositories()
+
 	userRepository := userstorage.NewUserRepository(userstorage.WithUserRepositoryDB(db))
 	postsRepository := poststorage.NewPostRepository(poststorage.WithPostRepositoryDB(db))
 	commentRepository := commentstorage.NewCommentRepository(commentstorage.WithCommentRepositoryDB(db))
 	likesRepository := likesstorage.NewLikeRepository(likesstorage.WithLikeRepositoryDB(db))
 	friendsRepository := friendsstorage.NewFriendRepository(friendsstorage.WithFriendRepositoryDB(db))
 
+	repo.UserStorer = userRepository
+	repo.PostStorer = postsRepository
+	repo.CommentStorer = commentRepository
+	repo.LikeStorer = likesRepository
+	repo.FriendStorer = friendsRepository
+
 	userService := usersevice.NewUserService(util, usersevice.WithUserServiceUserStorage(userRepository))
 	postsService := postservice.NewPostService(util, postservice.WithPostServicePostStorage(postsRepository))
-	commentService := commentservice.NewCommentService(util, commentservice.WithCommentServiceCommentStorage(commentRepository))
-	likesService := likesservice.NewLikesService(util, likesservice.WithLikesServiceLikesStorage(likesRepository))
+	commentService := commentservice.NewCommentService(util, repo, commentservice.WithCommentServiceCommentStorage(commentRepository))
+	likesService := likesservice.NewLikesService(util, repo, likesservice.WithLikesServiceLikesStorage(likesRepository))
 	friendService := friendsservice.NewFriendService(util, userRepository, friendsservice.WithFriendServiceFriendStorage(friendsRepository))
 
 	usersHandler := userhttphandler.NewHandler(util, userService)
