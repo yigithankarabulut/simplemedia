@@ -24,30 +24,29 @@ POST    /login
 POST    /user/logout
 PUT     /user/pwd
 PUT     /user/picture
-        
-POST    /comment/create
-PUT     /comment/update
-DELETE  /comment/delete
-GET     /comment/get
-GET     /comment/list
-        
+
 POST    /friends/add
 POST    /friends/accept
 DELETE  /friends/decline
 DELETE  /friends/delete
 GET     /friends/request
 GET     /friends/list
-        
-POST    /likes/create
-DELETE  /likes/delete
-GET     /likes/getall
-        
+
 POST    /post/create
 PUT     /post/update
 GET     /post/get
 DELETE  /post/delete
 GET     /post/getall
 
+POST    /comment/create
+PUT     /comment/update
+DELETE  /comment/delete
+GET     /comment/get
+GET     /comment/list
+        
+POST    /likes/create
+DELETE  /likes/delete
+GET     /likes/getall
 ```
 
 #### Additional Information:
