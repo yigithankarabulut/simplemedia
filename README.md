@@ -7,7 +7,6 @@ SimpleMedia is a social media API that allows users to register, connect with fr
 
 ##### Go 1.21.5
 ##### Docker and Docker Compose installed on your system.
-##### A Postman collection has been included for convenient API testing. Import the collection to explore and interact with the API endpoints.
 
 ### Make Commands:
 - all: Builds and starts both the application and database services.
@@ -48,6 +47,8 @@ POST    /likes/create
 DELETE  /likes/delete
 GET     /likes/getall
 ```
+#### Using Postman Collection:
+A Postman collection has been included for convenient API testing. Import the collection to explore and interact with the API endpoints.
 
 #### Additional Information:
 The PostgreSQL database data is persisted in the /home/postgres-data directory on your host machine.
